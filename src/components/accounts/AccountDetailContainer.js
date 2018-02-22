@@ -8,18 +8,19 @@ import AccountService from '../../utils/AccountService';
 const FormContainer = withFormik({
   mapPropsToValues: props => {
     return {
-      account: props.account || {id: 0, name: '', invoices: []},
+      account: props.account || AccountService.getBlankAccount(),
       name: props.name,
       save: props.save
     }},
   validationSchema: Yup.object().shape({
     name: Yup.string().required('Name is required')
   }),
-  handleSubmit(values, formikBag) {
+  // handleSubmit takes form values and formicBag, from which we take setErrors and form component props
+  handleSubmit(values, {setErrors, props}) {
     if(!values.name) {
-      formikBag.setErrors({name: 'Please enter account name'})
+      setErrors({name: 'Please enter account name'})
     } else {
-      values.save(Object.assign(formikBag.props.account, {name: values.name}));
+      values.save(Object.assign(props.account, {name: values.name}));
     }
   }
 })(AccountDetail);
@@ -47,7 +48,7 @@ export class AccountDetailContainer extends React.Component {
         this.setState({newName: result.name});
       });
     } else {
-      this.setState({account: {id: 0, name: '', invoices: []}});
+      this.setState({account: AccountService.getBlankAccount()});
     }
   }
 

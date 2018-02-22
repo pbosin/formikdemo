@@ -16,7 +16,7 @@ export class AccountDetail extends React.Component {
   }
 
   render() {
-    // Formik props are available on 'this.props'
+    // Formik props are available via 'this.props'
     return (
         <div>
           <Form horizontal onSubmit={this.props.handleSubmit}>
