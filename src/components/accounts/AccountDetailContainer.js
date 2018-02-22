@@ -15,11 +15,11 @@ const FormContainer = withFormik({
   validationSchema: Yup.object().shape({
     name: Yup.string().required('Name is required')
   }),
-  handleSubmit(values, {resetForm, setErrors, setSubmitting}) {
+  handleSubmit(values, formikBag) {
     if(!values.name) {
-      setErrors({name: 'Please enter account name'})
+      formikBag.setErrors({name: 'Please enter account name'})
     } else {
-      values.save(Object.assign(values.account, {name: values.name}));
+      values.save(Object.assign(formikBag.props.account, {name: values.name}));
     }
   }
 })(AccountDetail);
@@ -29,17 +29,17 @@ export class AccountDetailContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {account: {}, newName: '', redirect: false};
-    this.accountId = this.getAccountFromUrl(props.match.params.id);
+    this.accountId = AccountDetailContainer.getAccountIdFromUrl(props.match.params.id);
   }
 
-  getAccountFromUrl(id) {
+  static getAccountIdFromUrl(id) {
     let s = id.replace(':','');
     return parseInt(s);
   }
 
   componentDidMount() {
     if (isNaN(this.accountId)) {
-      this.accountId = this.getAccountFromUrl(this.props.match.params.id);
+      this.accountId = AccountDetailContainer.getAccountIdFromUrl(this.props.match.params.id);
     }
     if (this.accountId > 0) {
       AccountService.getAccount(this.accountId).then(result => {
@@ -58,9 +58,12 @@ export class AccountDetailContainer extends React.Component {
   }
 
   render() {
+    // not elegant, but the best imho way to programmatically redirect to the list; react-router should do better :(
     if (this.state.redirect) {
       return <Redirect to="/accounts" push={true}/>
     }
+    // save is passed to FormContainer to be called within handleSubmit and to be able to set state.redirect
+    // name is passed separately from account since formik maps tag properties by default
     return (
         <FormContainer name={this.state.newName} account={this.state.account} save={this.save.bind(this)}/>
     );

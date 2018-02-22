@@ -10,11 +10,11 @@ const Accounts = () => (
       <h1> Accounts </h1>
       <Switch>
         <Route exact path='/accounts' component={AccountListContainer}/>
-        <Route path='/accounts/:id' component={AccountDetailContainer}/>
+        <Route exact path='/accounts/:id' component={AccountDetailContainer}/>
         <Route exact path='/accounts/:id/invoices' component={AccountInvoiceList}/>
         <Route path='/accounts/:id/invoices/:invoiceid' component={AccountInvoiceDetail}/>
       </Switch>
     </div>
-)
+);
 
 export default Accounts;
