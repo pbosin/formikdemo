@@ -1,0 +1,12 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+th, td { padding: 5px; }
+
+.control-label { width: 120px; }
+
+.ml125 { margin-left: 125px; }
