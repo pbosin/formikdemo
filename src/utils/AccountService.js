@@ -10,6 +10,9 @@ class AccountService {
   getBlankAccount() {
     return {id: '', name: '', invoices: []};
   }
+  getBlankInvoice() {
+    return {id: '', name: '', amount: 0, due: 0};
+  }
 
   getAccounts() {
     return axios.get(`/accounts`).then(response => {

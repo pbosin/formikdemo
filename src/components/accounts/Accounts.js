@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import {AccountListContainer} from './AccountListContainer';
 import {AccountDetailContainer} from './AccountDetailContainer';
 import {AccountInvoiceListContainer} from './AccountInvoiceListContainer';
-import AccountInvoiceDetail from './AccountInvoiceDetail';
+import {AccountInvoiceDetailContainer} from './AccountInvoiceDetailContainer';
 
 const Accounts = () => (
     <div style={{marginLeft: '100px'}}>
@@ -12,7 +12,7 @@ const Accounts = () => (
         <Route exact path='/accounts' component={AccountListContainer}/>
         <Route exact path='/accounts/:id' component={AccountDetailContainer}/>
         <Route exact path='/accounts/:id/invoices' component={AccountInvoiceListContainer}/>
-        <Route path='/accounts/:id/invoices/:invoiceid' component={AccountInvoiceDetail}/>
+        <Route exact path='/accounts/:id/invoices/:invoiceid' component={AccountInvoiceDetailContainer}/>
       </Switch>
     </div>
 );

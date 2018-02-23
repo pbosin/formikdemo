@@ -8,7 +8,7 @@ export const AccountInvoiceList = (props) => (
       <h4>
         Account "{props.account.name}" Invoices
         <Button bsSize="xsmall" className="ml15">
-          <Link to={`/accounts/${props.account.id}`}>Back To Account List</Link>
+          <Link to="/accounts">Back To Account List</Link>
         </Button>
       </h4>
       <table>

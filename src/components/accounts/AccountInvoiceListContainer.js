@@ -6,7 +6,7 @@ export class AccountInvoiceListContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = { account: AccountService.getBlankAccount() };
-    this.accountId = parseInt(props.match.params.id);
+    this.accountId = parseInt(props.match.params.id, 10);
   }
 
   componentDidMount() {

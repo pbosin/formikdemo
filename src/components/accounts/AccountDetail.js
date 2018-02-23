@@ -7,8 +7,37 @@ import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import Col from 'react-bootstrap/lib/Col';
+import { withFormik } from 'formik';
+import Yup from "yup";
+import AccountService from "../../utils/AccountService";
 
-export class AccountDetail extends React.Component {
+/**
+ * formikWrapper expects parameters to include
+ *   name - the value of "name" input field - used by formik values for display, validation, etc..
+ *   account - the object to be used in handleSubmit
+ *   save - the function to be called in handleSubmit
+ */
+const formikWrapper = withFormik({
+  mapPropsToValues: props => {
+    return {
+      account: props.account || AccountService.getBlankAccount(),
+      name: props.name,
+      save: props.save
+    }},
+  validationSchema: Yup.object().shape({
+    name: Yup.string().required('Name is required')
+  }),
+  // handleSubmit takes form values and formicBag, from which we take setErrors and form component props
+  handleSubmit(values, {setErrors, props}) {
+    if(!values.name) {
+      setErrors({name: 'Please enter account name'})
+    } else {
+      values.save(Object.assign(props.account, {name: values.name}));
+    }
+  }
+});
+
+class AccountDetail extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.name !== this.props.name) {
       this.props.resetForm(nextProps);
@@ -53,3 +82,4 @@ export class AccountDetail extends React.Component {
   }
 }
 
+export default formikWrapper(AccountDetail);
