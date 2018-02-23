@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import {AccountListContainer} from './AccountListContainer';
 import {AccountDetailContainer} from './AccountDetailContainer';
-import AccountInvoiceList from './AccountInvoiceList';
+import {AccountInvoiceListContainer} from './AccountInvoiceListContainer';
 import AccountInvoiceDetail from './AccountInvoiceDetail';
 
 const Accounts = () => (
@@ -11,7 +11,7 @@ const Accounts = () => (
       <Switch>
         <Route exact path='/accounts' component={AccountListContainer}/>
         <Route exact path='/accounts/:id' component={AccountDetailContainer}/>
-        <Route exact path='/accounts/:id/invoices' component={AccountInvoiceList}/>
+        <Route exact path='/accounts/:id/invoices' component={AccountInvoiceListContainer}/>
         <Route path='/accounts/:id/invoices/:invoiceid' component={AccountInvoiceDetail}/>
       </Switch>
     </div>

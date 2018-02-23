@@ -30,19 +30,11 @@ export class AccountDetailContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {account: {}, newName: '', redirect: false};
-    this.accountId = AccountDetailContainer.getAccountIdFromUrl(props.match.params.id);
-  }
-
-  static getAccountIdFromUrl(id) {
-    let s = id.replace(':','');
-    return parseInt(s);
+    this.accountId = parseInt(props.match.params.id);
   }
 
   componentDidMount() {
-    if (isNaN(this.accountId)) {
-      this.accountId = AccountDetailContainer.getAccountIdFromUrl(this.props.match.params.id);
-    }
-    if (this.accountId > 0) {
+    if (this.accountId) {
       AccountService.getAccount(this.accountId).then(result => {
         this.setState({account: result});
         this.setState({newName: result.name});
