@@ -26,26 +26,21 @@ const formikWrapper = withFormik({
   }),
   // handleSubmit takes form values and formicBag, from which we take setErrors and form component props
   handleSubmit(values, {setErrors, props}) {
-    let valid = true;
-    if(!values.invoice.name) {
-      setErrors({"invoice.name": 'Please enter invoice name'});
-      valid = false;
-    }
-    if(!values.invoice.amount) {
-      setErrors({"invoice.amount": 'Please enter invoice amount'});
-      valid = false;
-    }
-    if(!values.invoice.due) {
-      setErrors({"invoice.due": 'Please enter outstanding balance due'});
-      valid = false;
-    }
-
-    if (valid) {
+    if (!values.invoice.name || !values.invoice.amount || !values.invoice.due) {
+      if(!values.invoice.name) {
+        setErrors({"invoice.name": 'Please enter invoice name'});
+      }
+      if(!values.invoice.amount) {
+        setErrors({"invoice.amount": 'Please enter invoice amount'});
+      }
+      if(!values.invoice.due) {
+        setErrors({"invoice.due": 'Please enter outstanding balance due'});
+      }
+    } else {
       props.save(values.invoice);
     }
   }
 });
-
 
 
 class AccountInvoiceDetail extends React.Component {
@@ -55,7 +50,7 @@ class AccountInvoiceDetail extends React.Component {
     if (nextProps.account.name !== this.props.account.name) {
       this.props.resetForm(nextProps);
       // re-mapping props to values, since resetForm will drop some mapped values
-      this.props.setValues({...this.props.values, ...{invoice:nextProps.invoice}});
+      this.props.setValues({...this.props.values, invoice: nextProps.invoice});
     }
   }
 
@@ -83,7 +78,9 @@ class AccountInvoiceDetail extends React.Component {
                     onChange={this.props.handleChange}
                     placeholder="Enter name"
                 />
-                {this.props.touched.invoice && this.props.touched.invoice.name && this.props.errors.invoice && this.props.errors.invoice.name && <p>{this.props.errors.invoice.name}</p>}
+                {this.props.touched.invoice && this.props.touched.invoice.name
+                && this.props.errors.invoice && this.props.errors.invoice.name
+                && <p>{this.props.errors.invoice.name}</p>}
               </Col>
             </FormGroup>
             <FormGroup>
@@ -100,7 +97,9 @@ class AccountInvoiceDetail extends React.Component {
                     onChange={this.props.handleChange}
                     placeholder="Enter amount"
                 />
-                {this.props.touched.invoice && this.props.touched.invoice.amount && this.props.errors.invoice && this.props.errors.invoice.amount && <p>{this.props.errors.invoice.amount}</p>}
+                {this.props.touched.invoice && this.props.touched.invoice.amount
+                && this.props.errors.invoice && this.props.errors.invoice.amount
+                && <p>{this.props.errors.invoice.amount}</p>}
               </Col>
             </FormGroup>
             <FormGroup>
@@ -117,7 +116,9 @@ class AccountInvoiceDetail extends React.Component {
                     onChange={this.props.handleChange}
                     placeholder="Enter balance due"
                 />
-                {this.props.touched.invoice && this.props.touched.invoice.due && this.props.errors.invoice && this.props.errors.invoice.due && <p>{this.props.errors.invoice.due}</p>}
+                {this.props.touched.invoice && this.props.touched.invoice.due
+                && this.props.errors.invoice && this.props.errors.invoice.due
+                && <p>{this.props.errors.invoice.due}</p>}
               </Col>
             </FormGroup>
             <FormGroup>
