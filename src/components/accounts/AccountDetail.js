@@ -21,8 +21,7 @@ const formikWrapper = withFormik({
   mapPropsToValues: props => {
     return {
       account: props.account || AccountService.getBlankAccount(),
-      name: props.name,
-      save: props.save
+      name: props.name
     }},
   validationSchema: Yup.object().shape({
     name: Yup.string().required('Name is required')
@@ -32,7 +31,7 @@ const formikWrapper = withFormik({
     if(!values.name) {
       setErrors({name: 'Please enter account name'})
     } else {
-      values.save(Object.assign(props.account, {name: values.name}));
+      props.save(Object.assign(props.account, {name: values.name}));
     }
   }
 });
@@ -69,7 +68,7 @@ class AccountDetail extends React.Component {
             <FormGroup>
               <Col smOffset={2} sm={10}>
                 <ButtonToolbar>
-                  <Button type="submit" bsSize="sm" bsStyle="primary" disabled={this.props.isSubmitting}>Save</Button>
+                  <Button type="submit" bsSize="sm" bsStyle="primary" disabled={this.props.isSubmitting || !this.props.dirty}>Save</Button>
                   <Button bsSize="sm">
                     <Link to="/accounts"> Cancel </Link>
                   </Button>

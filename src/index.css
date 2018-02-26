@@ -5,6 +5,10 @@ body {
   font-family: sans-serif;
 }
 
+.main-content {
+  margin-left: 100px;
+}
+
 th, td { padding: 5px; }
 
 .control-label { width: 120px; }

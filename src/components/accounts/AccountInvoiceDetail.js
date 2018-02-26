@@ -15,33 +15,33 @@ const formikWrapper = withFormik({
   mapPropsToValues: props => {
     return {
       account: props.account || AccountService.getBlankAccount(),
-      invoice: props.invoice || {},
-      name: props.invoice.name || '',
-      amount: props.invoice.amount || 0,
-      due: props.invoice.due || 0,
-      save: props.save
+      invoice: (props.invoice.length) ? props.invoice : AccountService.getBlankInvoice()
     }},
   validationSchema: Yup.object().shape({
-    name: Yup.string().required('Name is required')
+    invoice: Yup.object().shape({
+      name: Yup.string().required('Name is required'),
+      amount: Yup.string().required('Amount is required'),
+      due: Yup.string().required('Balance due is required'),
+    })
   }),
   // handleSubmit takes form values and formicBag, from which we take setErrors and form component props
   handleSubmit(values, {setErrors, props}) {
     let valid = true;
-    if(!values.name) {
-      setErrors({name: 'Please enter invoice name'});
+    if(!values.invoice.name) {
+      setErrors({"invoice.name": 'Please enter invoice name'});
       valid = false;
     }
-    if(!values.amount) {
-      setErrors({amount: 'Please enter invoice amount'});
+    if(!values.invoice.amount) {
+      setErrors({"invoice.amount": 'Please enter invoice amount'});
       valid = false;
     }
-    if(!values.due) {
-      setErrors({due: 'Please enter outstanding amount due'});
+    if(!values.invoice.due) {
+      setErrors({"invoice.due": 'Please enter outstanding balance due'});
       valid = false;
     }
 
     if (valid) {
-      values.save(Object.assign(props.invoice, {name: values.name, amount: values.amount, due: values.due}));
+      props.save(values.invoice);
     }
   }
 });
@@ -49,18 +49,21 @@ const formikWrapper = withFormik({
 
 
 class AccountInvoiceDetail extends React.Component {
+
+  // we need to re-render the form when the data is received from the server
   componentWillReceiveProps(nextProps) {
     if (nextProps.account.name !== this.props.account.name) {
       this.props.resetForm(nextProps);
-      this.props.setValues({...this.props.values, ...nextProps.invoice});
+      // re-mapping props to values, since resetForm will drop some mapped values
+      this.props.setValues({...this.props.values, ...{invoice:nextProps.invoice}});
     }
   }
 
   render() {
     // Formik props are available via 'this.props'
-    if (!this.props || !this.props.values || this.props.values.name === undefined) {
-      console.log('ubndefined')
-      // return (<div></div>);
+    if (!this.props || !this.props.values) {
+      console.log('undefined');
+      return (<div>Invalid data for invoice. </div>);
     }
     return (
         <div>
@@ -75,11 +78,12 @@ class AccountInvoiceDetail extends React.Component {
               <Col sm={5}>
                 <FormControl
                     type="text"
-                    name="name"
-                    value={this.props.values.name}
+                    name="invoice.name"
+                    value={this.props.values.invoice.name}
                     onChange={this.props.handleChange}
                     placeholder="Enter name"
                 />
+                {this.props.touched.invoice && this.props.touched.invoice.name && this.props.errors.invoice && this.props.errors.invoice.name && <p>{this.props.errors.invoice.name}</p>}
               </Col>
             </FormGroup>
             <FormGroup>
@@ -91,11 +95,12 @@ class AccountInvoiceDetail extends React.Component {
               <Col sm={5}>
                 <FormControl
                     type="text"
-                    name="amount"
-                    value={this.props.values.amount}
+                    name="invoice.amount"
+                    value={this.props.values.invoice.amount}
                     onChange={this.props.handleChange}
                     placeholder="Enter amount"
                 />
+                {this.props.touched.invoice && this.props.touched.invoice.amount && this.props.errors.invoice && this.props.errors.invoice.amount && <p>{this.props.errors.invoice.amount}</p>}
               </Col>
             </FormGroup>
             <FormGroup>
@@ -107,11 +112,12 @@ class AccountInvoiceDetail extends React.Component {
               <Col sm={5}>
                 <FormControl
                     type="text"
-                    name="due"
-                    value={this.props.values.due}
+                    name="invoice.due"
+                    value={this.props.values.invoice.due}
                     onChange={this.props.handleChange}
                     placeholder="Enter balance due"
                 />
+                {this.props.touched.invoice && this.props.touched.invoice.due && this.props.errors.invoice && this.props.errors.invoice.due && <p>{this.props.errors.invoice.due}</p>}
               </Col>
             </FormGroup>
             <FormGroup>

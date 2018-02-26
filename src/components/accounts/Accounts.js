@@ -6,7 +6,7 @@ import {AccountInvoiceListContainer} from './AccountInvoiceListContainer';
 import {AccountInvoiceDetailContainer} from './AccountInvoiceDetailContainer';
 
 const Accounts = () => (
-    <div style={{marginLeft: '100px'}}>
+    <div className="main-content">
       <h1> Accounts </h1>
       <Switch>
         <Route exact path='/accounts' component={AccountListContainer}/>

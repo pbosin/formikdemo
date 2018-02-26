@@ -7,8 +7,12 @@ export class AccountDetailContainer extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {account: {}, newName: '', redirect: false};
-    this.accountId = parseInt(props.match.params.id, 10);
+    this.state = {
+      account: {}, // object, which properties pre-populate the form
+      newName: '', // model for input binding
+      redirect: false // react-router hacky way to make redirects work
+    };
+    this.accountId = parseInt(props.match.params.id, 10); // router puts url params in props.match.params
   }
 
   componentDidMount() {
@@ -28,7 +32,7 @@ export class AccountDetailContainer extends React.Component {
   }
 
   render() {
-    // not elegant, but the best imho way to programmatically redirect to the list; react-router should do better :(
+    // not elegant, but the best known way to programmatically redirect to the list; react-router should do better :(
     if (this.state.redirect) {
       return <Redirect to="/accounts" push={true}/>
     }

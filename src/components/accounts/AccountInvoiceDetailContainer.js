@@ -14,13 +14,15 @@ export class AccountInvoiceDetailContainer extends React.Component {
 
   componentDidMount() {
     if (this.accountId) {
+      // load account, then find invoice in account invoices by invoiceId
       AccountService.getAccount(this.accountId).then(result => {
         let invoice = (this.invoiceId) ?
             this.findInvoiceById(result.invoices, this.invoiceId) : AccountService.getBlankInvoice();
         this.setState({account: result, invoice: invoice});
       });
     } else {
-      // this.setState({account: AccountService.getBlankAccount(), invoice: AccountService.getBlankInvoice()});
+      // handle error instead, as this should not happen
+      this.setState({account: AccountService.getBlankAccount(), invoice: AccountService.getBlankInvoice()});
     }
   }
 
@@ -31,6 +33,7 @@ export class AccountInvoiceDetailContainer extends React.Component {
   }
 
   save(invoice) {
+    // if the invoice is new, it was created by service w/o accountId, so need to set it before saving
     invoice.accountId = this.state.account.id;
     AccountService.saveInvoice(invoice).then(() => {
       this.setState({redirect: true});
