@@ -11,6 +11,8 @@ import { withFormik } from 'formik';
 import Yup from "yup";
 import AccountService from "../../utils/AccountService";
 
+import InvoiceAmounts from './InvoiceAmounts';
+
 const formikWrapper = withFormik({
   mapPropsToValues: props => {
     return {
@@ -20,8 +22,11 @@ const formikWrapper = withFormik({
   validationSchema: Yup.object().shape({
     invoice: Yup.object().shape({
       name: Yup.string().required('Name is required'),
-      amount: Yup.string().required('Amount is required'),
-      due: Yup.string().required('Balance due is required'),
+      amount: Yup.number().typeError('Amount should be a number').moreThan(0, 'Amount is required'),
+      due: Yup.number()
+          .typeError('Balance due should be a number')
+          .required('Balance due is required')
+          .max(Yup.ref('amount'), 'Balance due can not be greater than amount')
     })
   }),
   // handleSubmit takes form values and formicBag, from which we take setErrors and form component props
@@ -83,44 +88,7 @@ class AccountInvoiceDetail extends React.Component {
                 && <p>{this.props.errors.invoice.name}</p>}
               </Col>
             </FormGroup>
-            <FormGroup>
-              <Col sm={2}>
-                <ControlLabel>
-                  Invoice Amount
-                </ControlLabel>
-              </Col>
-              <Col sm={5}>
-                <FormControl
-                    type="text"
-                    name="invoice.amount"
-                    value={this.props.values.invoice.amount}
-                    onChange={this.props.handleChange}
-                    placeholder="Enter amount"
-                />
-                {this.props.touched.invoice && this.props.touched.invoice.amount
-                && this.props.errors.invoice && this.props.errors.invoice.amount
-                && <p>{this.props.errors.invoice.amount}</p>}
-              </Col>
-            </FormGroup>
-            <FormGroup>
-              <Col sm={2}>
-                <ControlLabel>
-                  Balance Due
-                </ControlLabel>
-              </Col>
-              <Col sm={5}>
-                <FormControl
-                    type="text"
-                    name="invoice.due"
-                    value={this.props.values.invoice.due}
-                    onChange={this.props.handleChange}
-                    placeholder="Enter balance due"
-                />
-                {this.props.touched.invoice && this.props.touched.invoice.due
-                && this.props.errors.invoice && this.props.errors.invoice.due
-                && <p>{this.props.errors.invoice.due}</p>}
-              </Col>
-            </FormGroup>
+            <InvoiceAmounts invoice={this.props.values.invoice} formikProps={this.props} />
             <FormGroup>
               <Col smOffset={2} sm={10}>
                 <ButtonToolbar>
